@@ -61,17 +61,6 @@ std::map<std::string, std::vector<std::string> > Files::getData(std::vector<std:
     return routes;
 }
 
-int Files::getDestinationIndex(std::string destination, std::vector<std::string> airports) {
-    int index = 0;
-    for (int i = 0; i < airports.size(); i++) {
-        if (airports[i] == destination) {
-            index = i;
-            break;
-        }
-    }
-    //std::cout << "Destination " << destination << " Index " << index << std::endl;
-    return index;
-}
 
 std::map<std::string, int> Files::getRouteLayovers() {
     return layovers;
