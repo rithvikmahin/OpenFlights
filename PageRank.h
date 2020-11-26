@@ -5,9 +5,9 @@ class PageRank
 public:
     PageRank(const char *file);
     void topPopularAirports(std::string source);
+    int getDestinationIndex(std::string destination, std::vector<std::string> airports);
 
 private:
-    int getDestinationIndex(std::string destination, std::vector<std::string> airports);
     std::vector<std::vector<double> > createMarkovMatrix();
     std::vector<std::vector<double> > getProbabilities(std::string source);
     std::map<std::string, std::vector<std::string> > routes;

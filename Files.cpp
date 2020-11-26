@@ -1,4 +1,5 @@
 #include "Files.h"
+#include <sstream>
 
 std::vector<std::string> Files::readFile(const char* filename) {
     std::ifstream text(filename);
@@ -43,10 +44,13 @@ std::map<std::string, std::vector<std::string> > Files::getData(std::vector<std:
                 destinationAirport = route.substr(0, index);
             }
 
-            /**if (position == 6) {
+            if (position == 6) {
                 std::string numberOfLayovers = route.substr(0, index);
-                layovers[sourceAirport + "-" + destinationAirport] = std::stoi(numberOfLayovers);
-            }*/
+                std::stringstream layoversStream(numberOfLayovers);
+                int layoversInteger = 0;
+                layoversStream >> layoversInteger;
+                layovers[sourceAirport + "-" + destinationAirport] = layoversInteger;
+            }
 
             if (position == 7) {
                 routes[sourceAirport].push_back(destinationAirport);

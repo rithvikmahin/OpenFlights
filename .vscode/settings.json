@@ -69,6 +69,7 @@
         "__tree": "cpp",
         "cinttypes": "cpp",
         "iomanip": "cpp",
-        "cfenv": "cpp"
+        "cfenv": "cpp",
+        "stack": "cpp"
     }
 }
