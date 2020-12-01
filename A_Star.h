@@ -39,7 +39,11 @@ class A_Star {
 
                 bool operator < (const Node& node) const {
                     return (f < node.f);
-                }   
+                }  
+
+                bool operator > (const Node& node) const {
+                    return (f > node.f);
+                }    
 
                 Node& operator=(const Node& node) {
                     this->name = node.name;
@@ -55,5 +59,5 @@ class A_Star {
 
     private:
         double calculateDistance(double latitude, double longitude, double destLatitude, double destLongitude); 
-        bool addToOpen(std::vector<A_Star::Node>, A_Star::Node node);
+        bool addToOpen(std::priority_queue<A_Star::Node, std::vector<A_Star::Node>, std::greater<A_Star::Node> >, A_Star::Node node);
 };

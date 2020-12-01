@@ -37,6 +37,9 @@ bool DFS::checkPathExists(std::string source, std::string destination) {
         }
 
         for (int i = 0; i < routes[airport].size(); i++) {
+            if (airport == source && routes[airport][i] == destination) {
+                continue;
+            }
             std::string destination = routes[airport][i];
             int destinationIndex = f->getIndex(destination, airports);
             if (visited[destinationIndex] == false) {

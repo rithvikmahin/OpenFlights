@@ -1,22 +1,21 @@
 #include "A_Star.h"
 
 std::vector<std::string> A_Star::search(std::string source, std::string destination, std::map<std::string, std::vector<std::string> > routes, std::map<std::string, std::vector<double> > airportCoordinates) {
-    std::vector<A_Star::Node> open;
+    std::priority_queue<A_Star::Node, std::vector<A_Star::Node>, std::greater<A_Star::Node> > open;
     std::map<std::string, bool> closed;
 
     A_Star::Node tempNode = Node();
     A_Star::Node start = Node(source, &tempNode);
 
-    open.push_back(start);
+    open.push(start);
     int counter = 0;
 
     while (open.size() > 0) {
-        std::sort(open.begin(), open.end());
         //TODO: Delete this memory
-        A_Star::Node* current = new Node(open[0]);
+        A_Star::Node* current = new Node(open.top());
         std::cout << counter << std::endl;
         counter++;
-        open.erase(open.begin());
+        open.pop();
         closed[current->name] = true;
 
         if (current->name == destination) {
@@ -60,11 +59,12 @@ std::vector<std::string> A_Star::search(std::string source, std::string destinat
             double currentLongitude = airportCoordinates[source][1];
             double distance = calculateDistance(currentLatitude, currentLongitude, destinationLatitude, destinationLongitude);
             neighbor.g = current->g + distance;
-            neighbor.h  = 0;
+            //TODO: Determine heuristic
+            neighbor.h  = distance;
             neighbor.f = neighbor.g + neighbor.h;
 
             if (addToOpen(open, neighbor) == true) {
-                open.push_back(neighbor);
+                open.push(neighbor);
             }
         }
         
@@ -81,10 +81,11 @@ double A_Star::calculateDistance(double latitude, double longitude, double destL
     return distance;
 }
 
-bool A_Star::addToOpen(std::vector<A_Star::Node> open, A_Star::Node node) {
-    std::vector<A_Star::Node> openCopy = open;
+bool A_Star::addToOpen(std::priority_queue<A_Star::Node, std::vector<A_Star::Node>, std::greater<A_Star::Node> > open, A_Star::Node node) {
+    std::priority_queue<A_Star::Node, std::vector<A_Star::Node>, std::greater<A_Star::Node> > openCopy = open;
     for (int i = 0; i < openCopy.size(); i++) {
-        A_Star::Node openNode = openCopy[i];
+        A_Star::Node openNode = openCopy.top();
+        openCopy.pop();
         if (node.name == (openNode.name) && node.f > openNode.f) {
             return false;
         }
