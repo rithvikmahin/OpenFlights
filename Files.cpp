@@ -6,6 +6,7 @@ std::vector<std::string> Files::readFile(const char* filename) {
     std::ifstream text(filename);
     std::stringstream output;
 
+    // Reads the file into a string stream.
     if (text.is_open()) {
         output << text.rdbuf();
     }

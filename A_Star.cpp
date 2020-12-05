@@ -8,26 +8,23 @@ std::vector<std::string> A_Star::search(std::string source, std::string destinat
     A_Star::Node start = Node(source, &tempNode);
 
     open.push(start);
-    int counter = 0;
+
+    std::cout << "Performing an A* search on the graph..." << std::endl;
 
     while (open.size() > 0) {
         //TODO: Delete this memory
         A_Star::Node* current = new Node(open.top());
-        std::cout << counter << std::endl;
-        counter++;
         open.pop();
         closed[current->name] = true;
 
         if (current->name == destination) {
             std::vector<std::string> path;
             std::string currentName = current->name;
-            int count = 0;
             
-            while (currentName != source && count < 10) {
+            while (currentName != source) {
                 path.push_back(currentName);
                 currentName = (current->parent)->name;
                 current = current->parent;
-                count++;
             }
 
             path.push_back(source);
@@ -75,10 +72,9 @@ std::vector<std::string> A_Star::search(std::string source, std::string destinat
 
 
 double A_Star::calculateDistance(double latitude, double longitude, double destLatitude, double destLongitude) {
-    double x = (latitude - destLatitude) * (latitude - destLatitude);
-    double y = (longitude - destLongitude) * (longitude - destLongitude);
-    double distance = sqrt(x + y);
-    return distance;
+    double pi = M_PI / 180;
+    double distance = 0.5 - (cos((destLatitude - latitude) * pi) / 2) + cos(latitude * pi) * cos(destLatitude * pi) * (1 - (cos((destLongitude - longitude) * pi)) / 2);
+    return (12742 * asin(sqrt(distance)));
 }
 
 bool A_Star::addToOpen(std::priority_queue<A_Star::Node, std::vector<A_Star::Node>, std::greater<A_Star::Node> > open, A_Star::Node node) {

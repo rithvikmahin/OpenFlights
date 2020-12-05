@@ -1,6 +1,8 @@
-#pragma once 
+#pragma once
+#define _USE_MATH_DEFINES 
 #include "Files.h"
 #include "math.h"
+# define M_PI   3.14159265358979323846
 #include <queue>
 
 class A_Star {

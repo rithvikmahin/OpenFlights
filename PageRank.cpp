@@ -1,15 +1,26 @@
 #include "PageRank.h"
+
+/** 
+ * Constructor for the PageRank class.
+ * @param file - A filename for a .dat file provided from the user's input.
+*/
 PageRank::PageRank(const char *file)
 {
     const char *filename = file;
     f = new Files();
     std::vector<std::string> data = f->readFile(filename);
     routes = f->getRoutes(data);
+    // The number of unique airports in the routes.dat file.
     dimension = routes.size();
 }
 
+/**
+ * Generates the graph of state transitions / markov matrix for the list of routes provided.
+ * @return - Returns a 2D vector of size NxN, where N is the number of unique airports in the routes.dat file.
+*/
 std::vector<std::vector<double> > PageRank::createMarkovMatrix()
 {
+    // Creates a matrix of dimension rows and dimension columns.
     std::vector<std::vector<double> > markov(dimension, std::vector<double>(dimension, 0));
     for (std::map<std::string, std::vector<std::string> >::const_iterator it = routes.begin(); it != routes.end(); ++it)
     {
@@ -20,29 +31,40 @@ std::vector<std::vector<double> > PageRank::createMarkovMatrix()
     {
         std::string source = airports[i];
         int sourceIndex = i;
+        // Finds the vector of routes (value) corresponding to the source (key).
         std::vector<std::string> destinations = routes[source];
 
         for (int j = 0; j < destinations.size(); j++)
         {
             std::string destination = destinations[j];
+            // Finds the index of the destination in the vector of airports.
             int destinationIndex = f->getIndex(destination, airports);
 
-            markov[sourceIndex][destinationIndex] += (double)1 / destinations.size();
+            markov[sourceIndex][destinationIndex] += (double) 1 / destinations.size();
         }
     }
     return markov;
 }
+
+/** 
+ * Generates the steady state vector to determine the long-term probability of each state transition.
+ * @param source - The source airport provided by the user.
+ * @return - A vector containing the probability of travelling from the source airport to each destination airport.
+ */
 std::vector<std::vector<double> > PageRank::getProbabilities(std::string source)
 {
+    // Creates a vector with dimension rows and 1 column.
     std::vector<std::vector<double> > startingState(1, std::vector<double>(dimension, 0));
     std::vector<std::vector<double> > markov = createMarkovMatrix();
-        int sourceIndex = f->getIndex(source, airports);
+    int sourceIndex = f->getIndex(source, airports);
 
+    // Sets the airport that the user starts at.
     startingState[0][sourceIndex] = 1;
 
     std::vector<std::vector<double> > steadyState(1, std::vector<double>(dimension, 0));
 
-    for (int iterations = 0; iterations < 1; iterations++)
+    // Performs matrix multiplication over a number of cycles / iterations to find the steady state vector.
+    for (int iterations = 0; iterations < 20; iterations++)
     {
         for (int i = 0; i < 1; i++)
         {
@@ -55,6 +77,7 @@ std::vector<std::vector<double> > PageRank::getProbabilities(std::string source)
             }
         }
         startingState = steadyState;
+        // Clears the steady state vector after each multiplication cycle.
         for (int m = 0; m < steadyState[0].size(); m++)
         {
             steadyState[0][m] = 0;
