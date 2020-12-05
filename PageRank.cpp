@@ -2,7 +2,7 @@
 
 /** 
  * Constructor for the PageRank class.
- * @param file - A filename for a .dat file provided from the user's input.
+ * @param file - A filename for a .dat file of routes provided from the user's input.
 */
 PageRank::PageRank(const char *file)
 {
@@ -22,6 +22,7 @@ std::vector<std::vector<double> > PageRank::createMarkovMatrix()
 {
     // Creates a matrix of dimension rows and dimension columns.
     std::vector<std::vector<double> > markov(dimension, std::vector<double>(dimension, 0));
+    // Traverses the map and pushes airports into a vector to assign them indices.
     for (std::map<std::string, std::vector<std::string> >::const_iterator it = routes.begin(); it != routes.end(); ++it)
     {
         airports.push_back(it->first);
@@ -77,7 +78,7 @@ std::vector<std::vector<double> > PageRank::getProbabilities(std::string source)
             }
         }
         startingState = steadyState;
-        // Clears the steady state vector after each multiplication cycle.
+        // Clears the steady state vector to contain a 0 probability after each multiplication cycle.
         for (int m = 0; m < steadyState[0].size(); m++)
         {
             steadyState[0][m] = 0;
@@ -86,12 +87,18 @@ std::vector<std::vector<double> > PageRank::getProbabilities(std::string source)
     return startingState;
 }
 
-void PageRank::topPopularAirports(std::string source){
-  int numberAirports = 10;
+/** 
+ * Prints out the top N (10 in this case) most popular airports that can be reached from a given source airport based on route frequency.
+ * @param source - The source airport provided by the user.
+*/
+void PageRank::topPopularAirports(std::string source) {
+    // The top N airports travelled to from the source, where N = 10.
+    int numberAirports = 10;
     std::vector<std::string> popularAirports;
     std::vector<double> probabilities;
     std::vector<std::vector<double> > startingState = getProbabilities(source);
 
+    // These loops find the top N maximum probabilities and therefore the most popular destination airports from the source.
     for (int i = 0; i < numberAirports; i++)
     {
         int maxIndex = 0;
@@ -114,7 +121,7 @@ void PageRank::topPopularAirports(std::string source){
 
     for (int i = 0; i < popularAirports.size(); i++)
     {
-        std::cout << "Airport " << popularAirports[i] << " Probability " << probabilities[i] << std::endl;
+        std::cout << i << ". " << popularAirports[i] << std::endl;
     }
 
     delete f;

@@ -15,6 +15,7 @@ class A_Star {
                 double h;
                 double f;
 
+                // The default constructor, used for starting nodes with no parents.
                 Node() {
                     this->name = "";
                     this->parent = NULL;
@@ -23,6 +24,7 @@ class A_Star {
                     this->f = 0;
                 }
 
+                // The copy constructor.
                 Node(const Node& node) {
                     this->name = node.name;
                     this->parent = node.parent;
@@ -30,23 +32,26 @@ class A_Star {
                     this->h = node.h;
                     this->f = node.f;
                 }
-
+                
                 Node(std::string name, A_Star::Node* parent) {
                     this->name = name;
                     this->parent = parent;
                     this->g = 0;
                     this->h = 0;
                     this->f = 0;
-                }
+                }   
 
+                // Overloaded the < operator to sort nodes in a priority queue.
                 bool operator < (const Node& node) const {
                     return (f < node.f);
                 }  
 
+                // Overloaded the > operator to sort nodes in a priority queue.
                 bool operator > (const Node& node) const {
                     return (f > node.f);
                 }    
 
+                // Overloads the assignment operator to assign nodes to one another.
                 Node& operator=(const Node& node) {
                     this->name = node.name;
                     this->parent = node.parent;

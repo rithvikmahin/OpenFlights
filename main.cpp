@@ -14,7 +14,9 @@ int main() {
         return -1;
     }
 
+    // Takes the filename of the .dat file containing the airports.
     if (!airportFileName.empty()) {
+        // Converts the string to a const char*.
         airportFile = airportFileName.c_str();
     }
 
@@ -27,6 +29,7 @@ int main() {
         return -1;
     }
 
+    // Takes the filename of the .dat file containing the routes.
     if (!routesFileName.empty()) {
         routesFile = routesFileName.c_str();
     }
@@ -39,6 +42,7 @@ int main() {
         return -1;
     }
 
+    // Ensures the user entered A* or PageRank.
     if (!choice.empty() && (choice == "A*" || choice == "PageRank")) {
 
         std::string source;
@@ -54,6 +58,7 @@ int main() {
             source = sourceName;
         }
 
+        // The branch to perform an A* search. 
         if (choice == "A*") {
             Files f = Files();
 
@@ -76,6 +81,7 @@ int main() {
                 destination = destinationName;
             }
 
+            // Checks that a non-direct path exists using DFS.
             DFS dfs = DFS(routesFile);
             bool pathExists = dfs.checkPathExists(source, destination);
             A_Star* a_star = new A_Star();
@@ -93,6 +99,7 @@ int main() {
             return 1;
         }
 
+        // The branch to use PageRank to find the popular airports.
         if (choice == "PageRank") {
             PageRank pagerank = PageRank(routesFile);
             pagerank.topPopularAirports(source);
