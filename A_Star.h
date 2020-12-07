@@ -60,7 +60,7 @@ class A_Star {
                     this->f = node.f;
                     return *this;
                 }
-        };
+        };  
 
         std::vector<std::string> search(std::string source, std::string destination, std::map<std::string, std::vector<std::string> > routes, std::map<std::string, std::vector<double> > airportCoordinates);
 

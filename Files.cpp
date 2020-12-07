@@ -116,14 +116,6 @@ std::map<std::string, std::vector<std::string> > Files::getRoutes(std::vector<st
                 destinationAirport = route.substr(0, index);
             }
 
-            if (position == 6) {
-                std::string numberOfLayovers = route.substr(0, index);
-                std::stringstream layoversStream(numberOfLayovers);
-                int layoversInteger = 0;
-                layoversStream >> layoversInteger;
-                layovers[sourceAirport + "-" + destinationAirport] = layoversInteger;
-            }
-
             route.erase(0, index + delimiter.length());
             position++;
             

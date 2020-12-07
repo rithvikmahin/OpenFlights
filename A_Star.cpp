@@ -22,7 +22,6 @@ std::vector<std::string> A_Star::search(std::string source, std::string destinat
     std::cout << "Performing an A* search on the graph..." << std::endl;
 
     while (open.size() > 0) {
-        //TODO: Delete this memory
         // Each airport is turned into a node.
         A_Star::Node* current = new Node(open.top());
         open.pop();
@@ -44,7 +43,6 @@ std::vector<std::string> A_Star::search(std::string source, std::string destinat
             path.push_back(source);
             // Reverse the list from B -> A to get the path from A -> B.
             std::reverse(path.begin(), path.end());
-
             return path;
         }
 

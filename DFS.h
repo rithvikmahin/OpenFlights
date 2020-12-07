@@ -10,6 +10,5 @@ class DFS {
     
     private:
         std::map<std::string, std::vector<std::string> > routes;
-        std::map<std::string, int> layovers;
         Files* f;
 };
