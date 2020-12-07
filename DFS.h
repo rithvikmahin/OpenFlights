@@ -10,5 +10,5 @@ class DFS {
     
     private:
         std::map<std::string, std::vector<std::string> > routes;
-        Files* f;
+        Files f;
 };

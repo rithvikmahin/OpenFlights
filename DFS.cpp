@@ -5,9 +5,9 @@
 */
 DFS::DFS(const char* file) {
     const char *filename = file;
-    f = new Files();
-    std::vector<std::string> data = f->readFile(filename);
-    routes = f->getRoutes(data);
+    f = Files();
+    std::vector<std::string> data = f.readFile(filename);
+    routes = f.getRoutes(data);
 }
 
 /**
@@ -44,7 +44,7 @@ bool DFS::checkPathExists(std::string source, std::string destination) {
         dfs.pop();
 
         // Converts the airport to its index.
-        int sourceIndex = f->getIndex(airport, airports);
+        int sourceIndex = f.getIndex(airport, airports);
 
         // Indicates that this airport has been traversed.
         if (visited[sourceIndex] == false) {
@@ -57,12 +57,11 @@ bool DFS::checkPathExists(std::string source, std::string destination) {
                 continue;
             }
             std::string destination = routes[airport][i];
-            int destinationIndex = f->getIndex(destination, airports);
+            int destinationIndex = f.getIndex(destination, airports);
             if (visited[destinationIndex] == false) {
                 dfs.push(destination);
             }
         }
     }
-    delete f;
     return false;
 }

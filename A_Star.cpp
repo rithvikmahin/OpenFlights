@@ -21,9 +21,12 @@ std::vector<std::string> A_Star::search(std::string source, std::string destinat
 
     std::cout << "Performing an A* search on the graph..." << std::endl;
 
+    std::vector<A_Star::Node*> nodes;
+
     while (open.size() > 0) {
         // Each airport is turned into a node.
         A_Star::Node* current = new Node(open.top());
+        nodes.push_back(current);
         open.pop();
         // Indicates that this airport has been traversed.
         closed[current->name] = true;
@@ -43,6 +46,12 @@ std::vector<std::string> A_Star::search(std::string source, std::string destinat
             path.push_back(source);
             // Reverse the list from B -> A to get the path from A -> B.
             std::reverse(path.begin(), path.end());
+            
+            for (int i = 0; i < nodes.size(); i++) {
+                delete nodes[i];
+                nodes[i] = NULL;
+            }
+            
             return path;
         }
 
@@ -86,7 +95,6 @@ std::vector<std::string> A_Star::search(std::string source, std::string destinat
                 open.push(neighbor);
             }
         }
-        
     }
     // If the previous loop fails, returns an empty vector indicating there is no path (already covered by DFS).
     std::vector<std::string> noPath;
