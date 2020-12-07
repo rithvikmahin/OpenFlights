@@ -70,6 +70,8 @@
         "cinttypes": "cpp",
         "iomanip": "cpp",
         "cfenv": "cpp",
-        "stack": "cpp"
+        "stack": "cpp",
+        "optional": "cpp",
+        "regex": "cpp"
     }
 }

@@ -12,6 +12,11 @@ std::vector<std::string> A_Star::search(std::string source, std::string destinat
     std::priority_queue<A_Star::Node, std::vector<A_Star::Node>, std::greater<A_Star::Node> > open;
     std::map<std::string, bool> closed;
 
+    if (routes.size() == 0 || airportCoordinates.size() == 0) {
+        std::vector<std::string> noPath;
+        return noPath;
+    }
+
     // An empty node to indicate the starting point has no parent node.
     A_Star::Node tempNode = Node();
     A_Star::Node start = Node(source, &tempNode);
@@ -22,7 +27,6 @@ std::vector<std::string> A_Star::search(std::string source, std::string destinat
     std::cout << "Performing an A* search on the graph..." << std::endl;
 
     std::vector<A_Star::Node*> nodes;
-
     while (open.size() > 0) {
         // Each airport is turned into a node.
         A_Star::Node* current = new Node(open.top());
