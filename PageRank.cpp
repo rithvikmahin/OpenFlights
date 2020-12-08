@@ -38,12 +38,14 @@ std::vector<std::vector<double> > PageRank::createMarkovMatrix()
         for (int j = 0; j < destinations.size(); j++)
         {
             std::string destination = destinations[j];
+            // std::cout<< "source: " << source<< " "<< "destination: " << destination << std::endl;
             // Finds the index of the destination in the vector of airports.
             int destinationIndex = f->getIndex(destination, airports);
 
-            markov[sourceIndex][destinationIndex] += (double) 1 / destinations.size();
+            markov[sourceIndex][destinationIndex] += (double)1 / destinations.size();
         }
     }
+ 
     return markov;
 }
 
@@ -84,6 +86,9 @@ std::vector<std::vector<double> > PageRank::getProbabilities(std::string source)
             steadyState[0][m] = 0;
         }
     }
+    // for (int i =0; i< startingState[0].size();i++){
+    //     std::cout << "starting state: " << startingState[0][i]<<std::endl;
+    // }
     return startingState;
 }
 
@@ -91,7 +96,8 @@ std::vector<std::vector<double> > PageRank::getProbabilities(std::string source)
  * Prints out the top N (10 in this case) most popular airports that can be reached from a given source airport based on route frequency.
  * @param source - The source airport provided by the user.
 */
-void PageRank::topPopularAirports(std::string source) {
+void PageRank::topPopularAirports(std::string source)
+{
     // The top N airports travelled to from the source, where N = 10.
     int numberAirports = 10;
     std::vector<std::string> popularAirports;
@@ -104,13 +110,13 @@ void PageRank::topPopularAirports(std::string source) {
         int maxIndex = 0;
         double max = 0;
         double probability = 0;
-        for (int i = 0; i < startingState[0].size(); i++)
+        for (int j = 0; j < startingState[0].size(); j++)
         {
-            if (startingState[0][i] > max)
+            if (startingState[0][j] > max)
             {
-                max = startingState[0][i];
-                maxIndex = i;
-                probability = startingState[0][i];
+                max = startingState[0][j];
+                maxIndex = j;
+                probability = startingState[0][j];
             }
         }
         startingState[0][maxIndex] = 0;
@@ -121,7 +127,7 @@ void PageRank::topPopularAirports(std::string source) {
 
     for (int i = 0; i < popularAirports.size(); i++)
     {
-        std::cout << i << ". " << popularAirports[i] << std::endl;
+        std::cout << i << ". " << popularAirports[i] << " Probability " << probabilities[i] << std::endl;
     }
 
     delete f;
