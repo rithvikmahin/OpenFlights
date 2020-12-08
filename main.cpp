@@ -35,7 +35,7 @@ int main() {
     }
 
     std::string choice;
-    std::cout << "Enter A* to find the shortest non-direct path from a source to a destination airport using A* and DFS. Enter PageRank to use PageRank and find the list of most popular airports out of a source airport." << std::endl;
+    std::cout << "Enter A* to find the shortest non-direct path from a source to a destination airport using A* and DFS. Enter PageRank to use PageRank and find the list of most popular airports given that you start a particular source airport." << std::endl;
 
     if (!(std::getline(std::cin, choice))) {
         std::cout << "Wrong choice input." << std::endl;

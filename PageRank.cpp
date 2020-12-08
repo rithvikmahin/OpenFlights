@@ -38,11 +38,25 @@ std::vector<std::vector<double> > PageRank::createMarkovMatrix()
         for (int j = 0; j < destinations.size(); j++)
         {
             std::string destination = destinations[j];
-            // std::cout<< "source: " << source<< " "<< "destination: " << destination << std::endl;
             // Finds the index of the destination in the vector of airports.
             int destinationIndex = f->getIndex(destination, airports);
 
             markov[sourceIndex][destinationIndex] += (double)1 / destinations.size();
+        }
+    }
+
+    for (int i = 0; i < airports.size(); i++)
+    {
+        std::string source = airports[i];
+        int sourceIndex = i;
+        // Finds the vector of routes (value) corresponding to the source (key).
+        std::vector<std::string> destinations = routes[source];
+
+        for (int j = 0; j < destinations.size(); j++)
+        {
+            std::string destination = destinations[j];
+            // Finds the index of the destination in the vector of airports.
+            int destinationIndex = f->getIndex(destination, airports);
         }
     }
  
@@ -80,20 +94,18 @@ std::vector<std::vector<double> > PageRank::getProbabilities(std::string source)
             }
         }
         startingState = steadyState;
+
         // Clears the steady state vector to contain a 0 probability after each multiplication cycle.
         for (int m = 0; m < steadyState[0].size(); m++)
         {
             steadyState[0][m] = 0;
         }
     }
-    // for (int i =0; i< startingState[0].size();i++){
-    //     std::cout << "starting state: " << startingState[0][i]<<std::endl;
-    // }
     return startingState;
 }
 
 /** 
- * Prints out the top N (10 in this case) most popular airports that can be reached from a given source airport based on route frequency.
+ * Prints out the top N (10 in this case) most popular airport starting at a given source airport based on route frequency.
  * @param source - The source airport provided by the user.
 */
 void PageRank::topPopularAirports(std::string source)
