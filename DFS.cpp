@@ -7,7 +7,7 @@ DFS::DFS(const char* file) {
     const char *filename = file;
     f = Files();
     std::vector<std::string> data = f.readFile(filename);
-    routes = f.getRoutes(data);
+    routes = f.getRoutes(data, true);
 }
 
 /**

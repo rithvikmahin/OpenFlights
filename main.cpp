@@ -66,7 +66,7 @@ int main() {
             std::map<std::string, std::vector<double> > airportCoordinates = f.getAirportCoordinates(airportData);
 
             std::vector<std::string> routesData = f.readFile(routesFile);
-            std::map<std::string, std::vector<std::string> > routes = f.getRoutes(routesData);
+            std::map<std::string, std::vector<std::string> > routes = f.getRoutes(routesData, true);
 
             std::string destination;
             std::string destinationName;

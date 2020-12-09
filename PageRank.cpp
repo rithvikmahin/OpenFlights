@@ -9,7 +9,7 @@ PageRank::PageRank(const char *file)
     const char *filename = file;
     f = new Files();
     std::vector<std::string> data = f->readFile(filename);
-    routes = f->getRoutes(data);
+    routes = f->getRoutes(data, false);
     // The number of unique airports in the routes.dat file.
     dimension = routes.size();
 }
@@ -35,13 +35,21 @@ std::vector<std::vector<double> > PageRank::createMarkovMatrix()
         // Finds the vector of routes (value) corresponding to the source (key).
         std::vector<std::string> destinations = routes[source];
 
+        // If a sink node (no outgoing connections) is reached, it has an equal probability of reaching all other airports.
+        if (destinations.size() == 1 && (source == destinations[0])) {
+            for (int j = 0; j < (markov[sourceIndex]).size(); j++) {
+                markov[sourceIndex][j] += (double) 1 / (markov[sourceIndex]).size();
+            }
+            continue;
+        }
+
         for (int j = 0; j < destinations.size(); j++)
         {
             std::string destination = destinations[j];
             // Finds the index of the destination in the vector of airports.
             int destinationIndex = f->getIndex(destination, airports);
 
-            markov[sourceIndex][destinationIndex] += (double)1 / destinations.size();
+            markov[sourceIndex][destinationIndex] += (double) 1 / destinations.size();
         }
     }
 
