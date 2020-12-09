@@ -18,8 +18,6 @@ DFS::DFS(const char* file) {
 */
 bool DFS::checkPathExists(std::string source, std::string destination) {
 
-    std::cout << "Conducting a depth-first search to ensure that a path exists..." << std::endl;
-
     std::vector<bool> visited;
     std::vector<std::string> airports;
 

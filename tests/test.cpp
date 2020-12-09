@@ -3,6 +3,7 @@
 #include "../Files.h"
 #include "../DFS.h"
 #include "../A_Star.h"
+#include "../PageRank.h"
 
 TEST_CASE("Files readFile() airports") {
     Files f = Files();
@@ -120,7 +121,7 @@ TEST_CASE("Files getIndex()") {
     REQUIRE(f.getIndex("ORD", airports) == 2);
 }
 
-TEST_CASE("A path exists from JFK -> BLR") { 
+TEST_CASE("DFS A path exists from JFK -> BLR") { 
     Files f = Files();
 
     const char* airportFile = "../airports.dat";
@@ -139,6 +140,132 @@ TEST_CASE("A path exists from JFK -> BLR") {
     bool pathExists = dfs.checkPathExists(source, destination);
 
     REQUIRE(pathExists == true);
+}
+
+TEST_CASE("DFS A path exists from ATL -> IAH (longest path)") { 
+    Files f = Files();
+
+    const char* airportFile = "../airports.dat";
+    const char* routesFile = "../testRoutes3.dat";
+
+    std::vector<std::string> airportData = f.readFile(airportFile);
+    std::map<std::string, std::vector<double> > airportCoordinates = f.getAirportCoordinates(airportData);
+
+    std::vector<std::string> routesData = f.readFile(routesFile);
+    std::map<std::string, std::vector<std::string> > routes = f.getRoutes(routesData, true);
+
+    std::string source = "ATL";
+    std::string destination = "IAH";
+
+    DFS dfs = DFS(routesFile);
+    bool pathExists = dfs.checkPathExists(source, destination);
+
+    REQUIRE(pathExists == true);
+}
+
+TEST_CASE("DFS A path does not exist from JFK -> SFO (direct paths not counted)") { 
+    Files f = Files();
+
+    const char* airportFile = "../airports.dat";
+    const char* routesFile = "../testRoutes.dat";
+
+    std::vector<std::string> airportData = f.readFile(airportFile);
+    std::map<std::string, std::vector<double> > airportCoordinates = f.getAirportCoordinates(airportData);
+
+    std::vector<std::string> routesData = f.readFile(routesFile);
+    std::map<std::string, std::vector<std::string> > routes = f.getRoutes(routesData, true);
+
+    std::string source = "JFK";
+    std::string destination = "SFO";
+
+    DFS dfs = DFS(routesFile);
+    bool pathExists = dfs.checkPathExists(source, destination);
+
+    REQUIRE(pathExists == false);
+}
+
+TEST_CASE("DFS A path does not exist from JFK -> JFK (path to self not counted)") { 
+    Files f = Files();
+
+    const char* airportFile = "../airports.dat";
+    const char* routesFile = "../testRoutes.dat";
+
+    std::vector<std::string> airportData = f.readFile(airportFile);
+    std::map<std::string, std::vector<double> > airportCoordinates = f.getAirportCoordinates(airportData);
+
+    std::vector<std::string> routesData = f.readFile(routesFile);
+    std::map<std::string, std::vector<std::string> > routes = f.getRoutes(routesData, true);
+
+    std::string source = "JFK";
+    std::string destination = "SFO";
+
+    DFS dfs = DFS(routesFile);
+    bool pathExists = dfs.checkPathExists(source, destination);
+
+    REQUIRE(pathExists == false);
+}
+
+TEST_CASE("DFS A path does not exist from JFK -> IAH (source not in the dataset)") { 
+    Files f = Files();
+
+    const char* airportFile = "../airports.dat";
+    const char* routesFile = "../testRoutes.dat";
+
+    std::vector<std::string> airportData = f.readFile(airportFile);
+    std::map<std::string, std::vector<double> > airportCoordinates = f.getAirportCoordinates(airportData);
+
+    std::vector<std::string> routesData = f.readFile(routesFile);
+    std::map<std::string, std::vector<std::string> > routes = f.getRoutes(routesData, true);
+
+    std::string source = "IAH";
+    std::string destination = "BLR";
+
+    DFS dfs = DFS(routesFile);
+    bool pathExists = dfs.checkPathExists(source, destination);
+
+    REQUIRE(pathExists == false);
+}
+
+TEST_CASE("DFS A path does not exist from JFK -> IAH (destination not in the dataset)") { 
+    Files f = Files();
+
+    const char* airportFile = "../airports.dat";
+    const char* routesFile = "../testRoutes.dat";
+
+    std::vector<std::string> airportData = f.readFile(airportFile);
+    std::map<std::string, std::vector<double> > airportCoordinates = f.getAirportCoordinates(airportData);
+
+    std::vector<std::string> routesData = f.readFile(routesFile);
+    std::map<std::string, std::vector<std::string> > routes = f.getRoutes(routesData, true);
+
+    std::string source = "JFK";
+    std::string destination = "IAH";
+
+    DFS dfs = DFS(routesFile);
+    bool pathExists = dfs.checkPathExists(source, destination);
+
+    REQUIRE(pathExists == false);
+}
+
+TEST_CASE("DFS A path does not exist from JFK -> IAH (source and destination not in the dataset)") { 
+    Files f = Files();
+
+    const char* airportFile = "../airports.dat";
+    const char* routesFile = "../testRoutes.dat";
+
+    std::vector<std::string> airportData = f.readFile(airportFile);
+    std::map<std::string, std::vector<double> > airportCoordinates = f.getAirportCoordinates(airportData);
+
+    std::vector<std::string> routesData = f.readFile(routesFile);
+    std::map<std::string, std::vector<std::string> > routes = f.getRoutes(routesData, true);
+
+    std::string source = "IAH";
+    std::string destination = "AXK";
+
+    DFS dfs = DFS(routesFile);
+    bool pathExists = dfs.checkPathExists(source, destination);
+
+    REQUIRE(pathExists == false);
 }
 
 TEST_CASE("Shortest path is JFK -> SFO -> BLR") {
@@ -168,5 +295,33 @@ TEST_CASE("Shortest path is JFK -> SFO -> BLR") {
     REQUIRE(result == "JFK -> SFO -> BLR");
 
     delete a_star;
+}
 
+TEST_CASE("Shortest path is ATL -> SFO -> IAH") {
+    Files f = Files();
+
+    const char* airportFile = "../airports.dat";
+    const char* routesFile = "../testRoutes3.dat";
+
+    std::vector<std::string> airportData = f.readFile(airportFile);
+    std::map<std::string, std::vector<double> > airportCoordinates = f.getAirportCoordinates(airportData);
+
+    std::vector<std::string> routesData = f.readFile(routesFile);
+    std::map<std::string, std::vector<std::string> > routes = f.getRoutes(routesData, true);
+
+    std::string source = "ATL";
+    std::string destination = "IAH";
+
+    A_Star* a_star = new A_Star();
+    std::vector<std::string> path = a_star->search(source, destination, routes, airportCoordinates);
+
+    std::string result;
+    for (int i = 0; i < path.size() - 1; i++) {
+        result += path[i] + " -> ";
+    }
+    result += path[path.size() - 1];
+
+    REQUIRE(result == "ATL -> DTW -> SFO -> EWR -> MIA -> IAH");
+
+    delete a_star;
 }

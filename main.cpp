@@ -83,10 +83,12 @@ int main() {
 
             // Checks that a non-direct path exists using DFS.
             DFS dfs = DFS(routesFile);
+            std::cout << "Conducting a depth-first search to ensure that a path exists..." << std::endl;
             bool pathExists = dfs.checkPathExists(source, destination);
             A_Star* a_star = new A_Star();
 
             if (pathExists) {
+                std::cout << "Performing an A* search on the graph..." << std::endl;
                 std::vector<std::string> path = a_star->search(source, destination, routes, airportCoordinates);
                 for (int i = 0; i < path.size() - 1; i++) {
                     std::cout << path[i] << " -> ";

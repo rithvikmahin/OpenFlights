@@ -24,8 +24,6 @@ std::vector<std::string> A_Star::search(std::string source, std::string destinat
     // Adds the source to begin the search.
     open.push(start);
 
-    std::cout << "Performing an A* search on the graph..." << std::endl;
-
     std::vector<A_Star::Node*> nodes;
     while (open.size() > 0) {
         // Each airport is turned into a node.
