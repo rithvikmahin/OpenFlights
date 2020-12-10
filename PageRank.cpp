@@ -9,7 +9,7 @@ PageRank::PageRank(const char *file)
     const char *filename = file;
     f = new Files();
     std::vector<std::string> data = f->readFile(filename);
-    routes = f->getRoutes(data);
+    routes = f->getRoutes(data, false);
     // The number of unique airports in the routes.dat file.
     dimension = routes.size();
 }
@@ -35,6 +35,14 @@ std::vector<std::vector<double> > PageRank::createMarkovMatrix()
         // Finds the vector of routes (value) corresponding to the source (key).
         std::vector<std::string> destinations = routes[source];
 
+        // If a sink node (no outgoing connections) is reached, it has an equal probability of reaching all other airports.
+        if (destinations.size() == 1 && (source == destinations[0])) {
+            for (int j = 0; j < (markov[sourceIndex]).size(); j++) {
+                markov[sourceIndex][j] += (double) 1 / (markov[sourceIndex]).size();
+            }
+            continue;
+        }
+
         for (int j = 0; j < destinations.size(); j++)
         {
             std::string destination = destinations[j];
@@ -44,6 +52,22 @@ std::vector<std::vector<double> > PageRank::createMarkovMatrix()
             markov[sourceIndex][destinationIndex] += (double) 1 / destinations.size();
         }
     }
+
+    for (int i = 0; i < airports.size(); i++)
+    {
+        std::string source = airports[i];
+        int sourceIndex = i;
+        // Finds the vector of routes (value) corresponding to the source (key).
+        std::vector<std::string> destinations = routes[source];
+
+        for (int j = 0; j < destinations.size(); j++)
+        {
+            std::string destination = destinations[j];
+            // Finds the index of the destination in the vector of airports.
+            int destinationIndex = f->getIndex(destination, airports);
+        }
+    }
+ 
     return markov;
 }
 
@@ -78,6 +102,7 @@ std::vector<std::vector<double> > PageRank::getProbabilities(std::string source)
             }
         }
         startingState = steadyState;
+
         // Clears the steady state vector to contain a 0 probability after each multiplication cycle.
         for (int m = 0; m < steadyState[0].size(); m++)
         {
@@ -88,10 +113,11 @@ std::vector<std::vector<double> > PageRank::getProbabilities(std::string source)
 }
 
 /** 
- * Prints out the top N (10 in this case) most popular airports that can be reached from a given source airport based on route frequency.
+ * Prints out the top N (10 in this case) most popular airport starting at a given source airport based on route frequency.
  * @param source - The source airport provided by the user.
 */
-void PageRank::topPopularAirports(std::string source) {
+void PageRank::topPopularAirports(std::string source)
+{
     // The top N airports travelled to from the source, where N = 10.
     int numberAirports = 10;
     std::vector<std::string> popularAirports;
@@ -104,13 +130,13 @@ void PageRank::topPopularAirports(std::string source) {
         int maxIndex = 0;
         double max = 0;
         double probability = 0;
-        for (int i = 0; i < startingState[0].size(); i++)
+        for (int j = 0; j < startingState[0].size(); j++)
         {
-            if (startingState[0][i] > max)
+            if (startingState[0][j] > max)
             {
-                max = startingState[0][i];
-                maxIndex = i;
-                probability = startingState[0][i];
+                max = startingState[0][j];
+                maxIndex = j;
+                probability = startingState[0][j];
             }
         }
         startingState[0][maxIndex] = 0;
@@ -121,7 +147,7 @@ void PageRank::topPopularAirports(std::string source) {
 
     for (int i = 0; i < popularAirports.size(); i++)
     {
-        std::cout << i << ". " << popularAirports[i] << std::endl;
+        std::cout << i << ". " << popularAirports[i] << " Probability " << probabilities[i] << std::endl;
     }
 
     delete f;

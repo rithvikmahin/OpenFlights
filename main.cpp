@@ -10,7 +10,7 @@ int main() {
     std::cout << "Enter the name of the file containing the list of airports." << std::endl;
 
     if (!(std::getline(std::cin, airportFileName))) {
-        std::cout << "Wrong input." << std::endl;
+        std::cout << "Wrong airports input." << std::endl;
         return -1;
     }
 
@@ -25,7 +25,7 @@ int main() {
     std::cout << "Enter the name of the file containing the list of routes." << std::endl;
 
     if (!(std::getline(std::cin, routesFileName))) {
-        std::cout << "Wrong input." << std::endl;
+        std::cout << "Wrong routes input." << std::endl;
         return -1;
     }
 
@@ -35,10 +35,10 @@ int main() {
     }
 
     std::string choice;
-    std::cout << "Enter A* to find the shortest non-direct path from a source to a destination airport using A* and DFS. Enter PageRank to use PageRank and find the list of most popular airports out of a source airport." << std::endl;
+    std::cout << "Enter A* to find the shortest non-direct path from a source to a destination airport using A* and DFS. Enter PageRank to use PageRank and find the list of most popular airports given that you start a particular source airport." << std::endl;
 
     if (!(std::getline(std::cin, choice))) {
-        std::cout << "Wrong input." << std::endl;
+        std::cout << "Wrong choice input." << std::endl;
         return -1;
     }
 
@@ -50,7 +50,7 @@ int main() {
         std::cout << "Enter the name of the source airport." << std::endl;
 
         if (!(std::getline(std::cin, sourceName))) {
-            std::cout << "Wrong input." << std::endl;
+            std::cout << "Wrong source input." << std::endl;
             return -1;
         }
 
@@ -66,7 +66,7 @@ int main() {
             std::map<std::string, std::vector<double> > airportCoordinates = f.getAirportCoordinates(airportData);
 
             std::vector<std::string> routesData = f.readFile(routesFile);
-            std::map<std::string, std::vector<std::string> > routes = f.getRoutes(routesData);
+            std::map<std::string, std::vector<std::string> > routes = f.getRoutes(routesData, true);
 
             std::string destination;
             std::string destinationName;
@@ -83,10 +83,12 @@ int main() {
 
             // Checks that a non-direct path exists using DFS.
             DFS dfs = DFS(routesFile);
+            std::cout << "Conducting a depth-first search to ensure that a path exists..." << std::endl;
             bool pathExists = dfs.checkPathExists(source, destination);
             A_Star* a_star = new A_Star();
 
             if (pathExists) {
+                std::cout << "Performing an A* search on the graph..." << std::endl;
                 std::vector<std::string> path = a_star->search(source, destination, routes, airportCoordinates);
                 for (int i = 0; i < path.size() - 1; i++) {
                     std::cout << path[i] << " -> ";
@@ -103,6 +105,7 @@ int main() {
         if (choice == "PageRank") {
             PageRank pagerank = PageRank(routesFile);
             pagerank.topPopularAirports(source);
+            return 1; 
         }
 
         std::cout << "Wrong input." << std::endl;

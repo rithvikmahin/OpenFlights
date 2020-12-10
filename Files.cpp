@@ -91,7 +91,7 @@ std::map<std::string, std::vector<double> > Files::getAirportCoordinates(std::ve
  * @param data - A vector of strings, where each string is each line in the routes.dat file. 
  * @return - A map of airport names (key) to a vector of strings (value), where each string in the vector is an airport that can be reached from the current source airport.
 */
-std::map<std::string, std::vector<std::string> > Files::getRoutes(std::vector<std::string> data) {
+std::map<std::string, std::vector<std::string> > Files::getRoutes(std::vector<std::string> data, bool isSearch) {
     std::map<std::string, std::vector<std::string> > routes;
 
     // Similar functionality to the method getAirportCoordinates.
@@ -120,6 +120,10 @@ std::map<std::string, std::vector<std::string> > Files::getRoutes(std::vector<st
             position++;
             
             if (position == 7) {
+                // Guarantees that all destination airports are saved as a key in the map.
+                if (isSearch && (routes.find(destinationAirport) == routes.end())) {
+                    routes[destinationAirport].push_back(destinationAirport);
+                }
                 routes[sourceAirport].push_back(destinationAirport);
                 position  = 0;
             }

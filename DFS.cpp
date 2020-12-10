@@ -7,7 +7,7 @@ DFS::DFS(const char* file) {
     const char *filename = file;
     f = Files();
     std::vector<std::string> data = f.readFile(filename);
-    routes = f.getRoutes(data);
+    routes = f.getRoutes(data, true);
 }
 
 /**
@@ -17,8 +17,6 @@ DFS::DFS(const char* file) {
  * @return - True if a path exists, and false otherwise.
 */
 bool DFS::checkPathExists(std::string source, std::string destination) {
-
-    std::cout << "Conducting a depth-first search to ensure that a path exists..." << std::endl;
 
     std::vector<bool> visited;
     std::vector<std::string> airports;
