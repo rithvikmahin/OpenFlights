@@ -121,6 +121,48 @@ TEST_CASE("Files getIndex()") {
     REQUIRE(f.getIndex("ORD", airports) == 2);
 }
 
+TEST_CASE("PageRank Markov matrix generated properly") {
+    Files f = Files();
+    const char* routesFile = "../testRoutes.dat";
+    PageRank pagerank = PageRank(routesFile);
+    std::vector<std::string> routesData = f.readFile(routesFile);
+    std::map<std::string, std::vector<std::string> > routes = f.getRoutes(routesData, true);
+
+    std::vector<std::vector<double> > markov {{0, 0, 0, 1, 0, 0, 0}, {(double) 1/7, (double) 1/7, (double) 1/7, (double) 1/7, (double) 1/7, (double) 1/7, (double) 1/7}, 
+    {(double) 1/5, (double) 1/5, 0, (double) 1/5, 0, (double) 1/5, (double) 1/5}, {0, 0, 0, 0, 1, 0, 0}, {(double) 1/2, (double) 1/2, 0, 0, 0, 0, 0}, {0, 0, 0, 1, 0, 0, 0}, {0, 1, 0, 0, 0, 0, 0}};
+    std::vector<std::vector<double> > generatedMarkov = pagerank.createMarkovMatrix();
+    
+    REQUIRE(markov == generatedMarkov);
+
+    for (int i = 0; i < generatedMarkov.size(); i++) {
+        double sum = 0;
+        for (int j = 0; j < generatedMarkov[i].size(); j++) {
+            sum += generatedMarkov[i][j];
+        }
+        REQUIRE(sum > 0.999);
+        REQUIRE(sum < 1.001);
+    }
+}
+
+
+TEST_CASE("PageRank steady state created properly") {
+    Files f = Files();
+    const char* routesFile = "../testRoutes.dat";
+    PageRank pagerank = PageRank(routesFile);
+    std::vector<std::string> routesData = f.readFile(routesFile);
+    std::map<std::string, std::vector<std::string> > routes = f.getRoutes(routesData, true);
+    std::string source = "JFK";
+
+    std::vector<std::vector<double> > steadyState = pagerank.getProbabilities(source);
+
+    double sum = 0;
+    for (int i = 0; i < steadyState[0].size(); i++) {
+        sum += steadyState[0][i];
+    }
+    REQUIRE(sum > 0.999);
+    REQUIRE(sum < 1.001);
+}
+
 TEST_CASE("DFS A path exists from JFK -> BLR") { 
     Files f = Files();
 
